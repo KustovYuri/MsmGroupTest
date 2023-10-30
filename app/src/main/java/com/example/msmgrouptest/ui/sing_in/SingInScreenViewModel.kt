@@ -9,8 +9,10 @@ import com.example.msmgrouptest.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +24,9 @@ class SingInScreenViewModel @Inject constructor(
 
     private val _isLoadingData = mutableStateOf(false)
     val isLoadingData: State<Boolean> = _isLoadingData
+
+    private val authEventChannel = Channel<SingInEvent>()
+    val authEvents = authEventChannel.receiveAsFlow()
 
     fun setLoginData(text:String){
         _inputUserData.value = _inputUserData.value.copy(login = text)
@@ -38,15 +43,20 @@ class SingInScreenViewModel @Inject constructor(
 
             when(result){
                 is Resource.Success->{
-
+                    authEventChannel.send(SingInEvent.Success(result.data?.status?:"Успех"))
                 }
                 is Resource.Error->{
-
+                    authEventChannel.send(SingInEvent.Error(result.message?:"Неизвестная ошибка"))
                 }
                 is Resource.Loading->{
                     _isLoadingData.value = true
                 }
             }
         }.launchIn(CoroutineScope(Dispatchers.IO))
+    }
+
+    sealed class SingInEvent{
+        data class Success(val message:String): SingInEvent()
+        data class Error(val message: String) : SingInEvent()
     }
 }

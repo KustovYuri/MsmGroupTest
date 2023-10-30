@@ -22,10 +22,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -53,7 +57,30 @@ fun SingInScreen() {
 
     val viewModel = hiltViewModel<SingInScreenViewModel>()
 
-    Scaffold() {
+    val context = LocalContext.current
+
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(key1 = context){
+        viewModel.authEvents.collect{event ->
+            when(event){
+                is SingInScreenViewModel.SingInEvent.Success ->{
+                    snackBarHostState.showSnackbar(
+                        message = event.message
+                    )
+                }
+                is SingInScreenViewModel.SingInEvent.Error ->{
+                    snackBarHostState.showSnackbar(
+                        message = event.message
+                    )
+                }
+            }
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) }
+    ) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
