@@ -47,8 +47,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.msmgrouptest.R
+import com.example.msmgrouptest.ui.host_settings_dialog.HostSettingsDialog
 import com.example.msmgrouptest.ui.theme.backgroundColor
-import com.example.msmgrouptest.ui.theme.buttonTextColor
+import com.example.msmgrouptest.ui.theme.buttonColor
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -151,8 +152,8 @@ private fun InputForm(viewModel: SingInScreenViewModel){
         singleLine = true,
         textStyle = TextStyle(fontSize = 16.sp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = buttonTextColor,
-            cursorColor = buttonTextColor
+            focusedBorderColor = buttonColor,
+            cursorColor = buttonColor
         )
     )
 
@@ -191,8 +192,8 @@ private fun InputForm(viewModel: SingInScreenViewModel){
             }
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = buttonTextColor,
-            cursorColor = buttonTextColor
+            focusedBorderColor = buttonColor,
+            cursorColor = buttonColor
         )
     )
     Spacer(modifier = Modifier.height(48.dp))
@@ -210,7 +211,7 @@ private fun InputButton(
         ,
         shape = RoundedCornerShape(13.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = buttonTextColor
+            containerColor = buttonColor
         ),
         onClick = {
             sendData()
@@ -233,6 +234,11 @@ private fun InputButton(
 
 @Composable
 fun SettingsButton(){
+    val dialogIsOpen = remember { mutableStateOf(false) }
+
+    if (dialogIsOpen.value)
+        HostSettingsDialog(openDialog = dialogIsOpen)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -241,7 +247,7 @@ fun SettingsButton(){
     ) {
         IconButton(
             modifier = Modifier.padding(horizontal = 20.dp),
-            onClick = {}
+            onClick = {dialogIsOpen.value = true}
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_settings_24),
