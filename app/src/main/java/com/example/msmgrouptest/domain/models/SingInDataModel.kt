@@ -1,10 +1,10 @@
-package com.example.msmgrouptest.ui.domain.models
+package com.example.msmgrouptest.domain.models
 
 import com.google.gson.annotations.SerializedName
 
-data class DataSingInDataModel(
+data class SingInDataModel(
     @SerializedName("email")
-    val email: String,
+    val login: String,
     @SerializedName("password")
     val password: String
 )

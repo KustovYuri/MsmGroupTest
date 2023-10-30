@@ -1,6 +1,6 @@
-package com.example.msmgrouptest.ui.di
+package com.example.msmgrouptest.di
 
-import com.example.msmgrouptest.ui.data.data_sources.MsmApi
+import com.example.msmgrouptest.data.data_sources.MsmApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

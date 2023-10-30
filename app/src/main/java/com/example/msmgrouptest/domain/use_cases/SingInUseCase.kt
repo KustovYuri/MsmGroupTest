@@ -1,32 +1,21 @@
-package com.example.initialization_impl.domain.use_cases
+package com.example.msmgrouptest.domain.use_cases
 
-import com.example.common.Resource
-import com.example.initialization_impl.domain.models.FeatureSingInDataModel
-import com.example.initialization_impl.domain.models.FeatureSingInResponse
-import com.example.initialization_impl.domain.models.FeatureInitUserMetaData
-import com.example.initialization_impl.domain.repositories.SingInFeatureMetaDataRepository
-import com.example.initialization_impl.domain.repositories.InitializationFeatureRepository
+import com.example.msmgrouptest.domain.models.SingInDataModel
+import com.example.msmgrouptest.domain.models.SingInResponse
+import com.example.msmgrouptest.domain.repositories.InitializationRepository
+import com.example.msmgrouptest.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
 class SingInUseCase @Inject constructor(
-    private val singInRepository: InitializationFeatureRepository,
-    private val metaDataRepository: SingInFeatureMetaDataRepository,
+    private val singInRepository: InitializationRepository,
 ) {
-    operator fun invoke(singInData: FeatureSingInDataModel): Flow<Resource<FeatureSingInResponse>> = flow {
+    operator fun invoke(singInData: SingInDataModel): Flow<Resource<SingInResponse>> = flow {
         try {
             emit(Resource.Loading())
             val response = singInRepository.singIn(singInData)
-            metaDataRepository.saveUserMetaData(
-                FeatureInitUserMetaData(
-                    userToken = response.data.token,
-                    userQrToken = response.data.qrToken,
-                    refreshToken = response.data.refreshToken,
-                    type = response.data.type
-                )
-            )
             emit(Resource.Success(response))
         }catch (e:Exception){
             emit(Resource.Error(e.message.toString()))

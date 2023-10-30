@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.msmgrouptest.R
 import com.example.msmgrouptest.ui.theme.backgroundColor
 import com.example.msmgrouptest.ui.theme.buttonTextColor
@@ -42,6 +44,9 @@ import com.example.msmgrouptest.ui.theme.buttonTextColor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SingInScreen() {
+
+    val viewModel = hiltViewModel<SingInScreenViewModel>()
+
     Scaffold() {
         Surface(
             modifier = Modifier
@@ -57,15 +62,20 @@ fun SingInScreen() {
                 SettingsButton()
                 Spacer(modifier = Modifier.height(50.dp))
                 Image(
-                    modifier = Modifier.fillMaxWidth().padding(32.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(32.dp),
                     painter = painterResource(id = R.drawable.mcm_logo),
                     contentDescription = "logo",
                     contentScale = ContentScale.FillWidth
                 )
                 Spacer(modifier = Modifier.height(50.dp))
-                InputForm()
+                InputForm(viewModel)
                 Spacer(modifier = Modifier.weight(1f))
-                InputButton()
+                InputButton(
+                    sendData = {viewModel.sendData()},
+                    isLoading = viewModel.isLoadingData.value
+                )
                 Spacer(modifier = Modifier.height(64.dp))
             }
         }
@@ -74,7 +84,7 @@ fun SingInScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun InputForm(){
+private fun InputForm(viewModel: SingInScreenViewModel){
     Row(
         modifier = Modifier.fillMaxWidth(0.81f),
         horizontalArrangement = Arrangement.Start
@@ -89,9 +99,9 @@ private fun InputForm(){
         modifier = Modifier
             .fillMaxWidth(0.85f),
         shape = RoundedCornerShape(13.dp),
-        value = "",
+        value = viewModel.inputUserData.value.login,
         onValueChange = {
-
+            viewModel.setLoginData(it)
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email
@@ -116,9 +126,9 @@ private fun InputForm(){
         modifier = Modifier
             .fillMaxWidth(0.85f),
         shape = RoundedCornerShape(13.dp),
-        value = "",
+        value = viewModel.inputUserData.value.password,
         onValueChange = {
-
+            viewModel.setPasswordData(it)
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password
@@ -131,7 +141,10 @@ private fun InputForm(){
 }
 
 @Composable
-private fun InputButton(){
+private fun InputButton(
+    sendData: () -> Unit,
+    isLoading: Boolean
+){
     Button(
         modifier = Modifier
             .fillMaxWidth(0.85f)
@@ -142,22 +155,30 @@ private fun InputButton(){
             containerColor = buttonTextColor
         ),
         onClick = {
-
+            sendData()
         }
     ) {
-        Text(
-            text = "Войти",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Normal,
-            color = backgroundColor
-        )
+        if (!isLoading){
+            Text(
+                text = "Войти",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Normal,
+                color = backgroundColor
+            )
+        }else{
+            CircularProgressIndicator(
+                color = backgroundColor
+            )
+        }
     }
 }
 
 @Composable
 fun SettingsButton(){
     Row(
-        modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
         horizontalArrangement = Arrangement.End
     ) {
         IconButton(

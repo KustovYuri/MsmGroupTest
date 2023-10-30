@@ -15,7 +15,9 @@ import com.example.msmgrouptest.ui.sing_in.SingInScreen
 import com.example.msmgrouptest.ui.theme.MsmGroupTestTheme
 import com.example.msmgrouptest.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,8 +1,8 @@
-package com.example.msmgrouptest.ui.domain.models
+package com.example.msmgrouptest.domain.models
 
 import com.google.gson.annotations.SerializedName
 
-data class DataSingInResponse(
+data class SingInResponse(
     @SerializedName("data")
     val data: DataUserMeta,
     @SerializedName("status")

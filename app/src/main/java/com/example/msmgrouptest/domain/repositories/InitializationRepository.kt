@@ -1,8 +1,8 @@
-package com.example.msmgrouptest.ui.domain.repositories
+package com.example.msmgrouptest.domain.repositories
 
-import com.example.msmgrouptest.ui.domain.models.DataSingInDataModel
-import com.example.msmgrouptest.ui.domain.models.DataSingInResponse
+import com.example.msmgrouptest.domain.models.SingInDataModel
+import com.example.msmgrouptest.domain.models.SingInResponse
 
 interface InitializationRepository {
-    suspend fun singIn(singInData: DataSingInDataModel): DataSingInResponse
+    suspend fun singIn(singInData: SingInDataModel): SingInResponse
 }

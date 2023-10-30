@@ -1,7 +1,7 @@
-package com.example.msmgrouptest.ui.di
+package com.example.msmgrouptest.di
 
-import com.example.msmgrouptest.ui.data.repositories.InitialMsmRepository
-import com.example.msmgrouptest.ui.domain.repositories.InitializationRepository
+import com.example.msmgrouptest.data.repositories.InitialMsmRepository
+import com.example.msmgrouptest.domain.repositories.InitializationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
