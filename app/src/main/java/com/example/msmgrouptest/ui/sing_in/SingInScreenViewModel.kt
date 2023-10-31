@@ -10,10 +10,14 @@ import com.example.msmgrouptest.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,23 +41,30 @@ class SingInScreenViewModel @Inject constructor(
         _inputUserData.value = _inputUserData.value.copy(password = text)
     }
 
+    private var flowJob: Job? = null
+
     fun sendData(){
-        sigInUseCase(_inputUserData.value).onEach { result ->
 
-            _isLoadingData.value = false
+        flowJob?.cancel()
 
-            when(result){
-                is Resource.Success->{
-                    authEventChannel.send(SingInEvent.Success(result.data?.userName?:"Успех"))
+        flowJob = viewModelScope.launch {
+            sigInUseCase(_inputUserData.value).onEach { result ->
+
+                _isLoadingData.value = false
+
+                when(result){
+                    is Resource.Success->{
+                        authEventChannel.send(SingInEvent.Success(result.data?.userName?:"Успех"))
+                    }
+                    is Resource.Error->{
+                        authEventChannel.send(SingInEvent.Error(result.message?:"Неизвестная ошибка"))
+                    }
+                    is Resource.Loading->{
+                        _isLoadingData.value = true
+                    }
                 }
-                is Resource.Error->{
-                    authEventChannel.send(SingInEvent.Error(result.message?:"Неизвестная ошибка"))
-                }
-                is Resource.Loading->{
-                    _isLoadingData.value = true
-                }
-            }
-        }.launchIn(viewModelScope)
+            }.launchIn(this)
+        }
     }
 
     sealed class SingInEvent{
