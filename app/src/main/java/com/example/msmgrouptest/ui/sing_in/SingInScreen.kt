@@ -54,7 +54,9 @@ import com.example.msmgrouptest.ui.theme.buttonColor
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SingInScreen() {
+fun SingInScreen(
+    navigationToMainScreen: () -> Unit
+) {
 
     val viewModel = hiltViewModel<SingInScreenViewModel>()
 
@@ -66,9 +68,7 @@ fun SingInScreen() {
         viewModel.authEvents.collect{event ->
             when(event){
                 is SingInScreenViewModel.SingInEvent.Success ->{
-                    snackBarHostState.showSnackbar(
-                        message = event.message
-                    )
+                    navigationToMainScreen()
                 }
                 is SingInScreenViewModel.SingInEvent.Error ->{
                     snackBarHostState.showSnackbar(

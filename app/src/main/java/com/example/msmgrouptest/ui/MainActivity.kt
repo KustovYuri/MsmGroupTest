@@ -12,6 +12,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.msmgrouptest.ui.main.MainScreen
+import com.example.msmgrouptest.ui.navigation.MsmNavigation
 import com.example.msmgrouptest.ui.sing_in.SingInScreen
 import com.example.msmgrouptest.ui.theme.MsmGroupTestTheme
 import com.example.msmgrouptest.ui.theme.backgroundColor
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
                 systemUiController.setNavigationBarColor(color = backgroundColor)
             }
 
-            MainScreen()
+            MsmNavigation()
         }
     }
 }

@@ -48,7 +48,7 @@ fun MainScreen() {
     val viewModel = hiltViewModel<MainScreenViewModel>()
 
     Scaffold(
-        topBar = { ExitButton()},
+        topBar = {ExitButton()},
         containerColor = backgroundColor,
     ) {
         Column(
@@ -200,6 +200,8 @@ fun DataCard(
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(24.dp))
+            TimerUi()
         }
     }
 }
