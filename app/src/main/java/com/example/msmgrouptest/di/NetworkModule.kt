@@ -1,5 +1,6 @@
 package com.example.msmgrouptest.di
 
+import android.annotation.SuppressLint
 import com.example.msmgrouptest.data.data_sources.MsmApi
 import dagger.Module
 import dagger.Provides
@@ -10,8 +11,13 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import javax.inject.Named
 import javax.inject.Singleton
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -22,7 +28,7 @@ object NetworkModule {
     @Provides
     @Singleton
     @Named(BASE_URL)
-    fun provideBaseUrlString():String = "https://fefufit.dvfu.ru"
+    fun provideBaseUrlString():String = "https://test.wlbs.ru"
 
     @Provides
     @Singleton
@@ -46,7 +52,24 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(interceptors: ArrayList<Interceptor>):OkHttpClient{
+
+        val trustAllCerts = arrayOf<TrustManager>(
+        object : X509TrustManager {
+            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+
+            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+
+            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                return arrayOf()
+            }
+        })
+
+        val sslContext = SSLContext.getInstance("SSL")
+        sslContext.init(null, trustAllCerts, SecureRandom())
+
         val clientBuilder = OkHttpClient.Builder()
+            .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as  X509TrustManager)
+            .hostnameVerifier { _, _ -> true }
             .followRedirects(false)
         interceptors.forEach{
             clientBuilder.addInterceptor(it)

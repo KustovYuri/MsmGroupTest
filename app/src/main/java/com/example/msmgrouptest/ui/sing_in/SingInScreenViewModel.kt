@@ -3,6 +3,7 @@ package com.example.msmgrouptest.ui.sing_in
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.msmgrouptest.domain.models.SingInDataModel
 import com.example.msmgrouptest.domain.use_cases.SingInUseCase
 import com.example.msmgrouptest.utils.Resource
@@ -43,7 +44,7 @@ class SingInScreenViewModel @Inject constructor(
 
             when(result){
                 is Resource.Success->{
-                    authEventChannel.send(SingInEvent.Success(result.data?.status?:"Успех"))
+                    authEventChannel.send(SingInEvent.Success(result.data?.userName?:"Успех"))
                 }
                 is Resource.Error->{
                     authEventChannel.send(SingInEvent.Error(result.message?:"Неизвестная ошибка"))
@@ -52,7 +53,7 @@ class SingInScreenViewModel @Inject constructor(
                     _isLoadingData.value = true
                 }
             }
-        }.launchIn(CoroutineScope(Dispatchers.IO))
+        }.launchIn(viewModelScope)
     }
 
     sealed class SingInEvent{
