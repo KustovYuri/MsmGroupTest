@@ -13,7 +13,7 @@ fun MsmNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Navigation.MainScreen.route
+        startDestination = Navigation.InitializationScreen.route
     ) {
         composable(route = Navigation.InitializationScreen.route) {
             SingInScreen(

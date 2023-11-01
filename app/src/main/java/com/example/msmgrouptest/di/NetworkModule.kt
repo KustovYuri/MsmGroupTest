@@ -1,7 +1,8 @@
 package com.example.msmgrouptest.di
 
-import android.annotation.SuppressLint
+import com.example.msmgrouptest.Config
 import com.example.msmgrouptest.data.data_sources.MsmApi
+import com.example.msmgrouptest.data.utils.BaseUrlManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +29,7 @@ object NetworkModule {
     @Provides
     @Singleton
     @Named(BASE_URL)
-    fun provideBaseUrlString():String = "https://test.wlbs.ru"
+    fun provideBaseUrlString():String = Config.currentHost
 
     @Provides
     @Singleton
@@ -51,7 +52,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(interceptors: ArrayList<Interceptor>):OkHttpClient{
+    fun provideOkHttpClient(
+        interceptors: ArrayList<Interceptor>,
+        baseUrlManager: BaseUrlManager
+    ):OkHttpClient{
 
         val trustAllCerts = arrayOf<TrustManager>(
         object : X509TrustManager {
@@ -71,6 +75,15 @@ object NetworkModule {
             .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as  X509TrustManager)
             .hostnameVerifier { _, _ -> true }
             .followRedirects(false)
+            .addInterceptor { chain ->
+                val newUrl = chain.request().url.newBuilder()
+                    .host(baseUrlManager.getHost())
+                    .build()
+                val newRequest = chain.request().newBuilder()
+                    .url(newUrl)
+                    .build()
+                chain.proceed(newRequest)
+            }
         interceptors.forEach{
             clientBuilder.addInterceptor(it)
         }
@@ -86,6 +99,12 @@ object NetworkModule {
         }
         interceptors.add(loggingInterceptor)
         return interceptors
+    }
+
+    @Provides
+    @Singleton
+    fun providesBaseUrlManager(): BaseUrlManager{
+        return BaseUrlManager()
     }
 
 }

@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuDefaults
@@ -120,36 +121,45 @@ private fun HostSelector(
 
 
     Column(){
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged {
-                    expe = it.isFocused
+        ExposedDropdownMenuBox(
+            expanded = expe,
+            onExpandedChange = {expe = !expe}
+        ) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(),
+                shape = RoundedCornerShape(13.dp),
+                value = selectedHost,
+                onValueChange = {},
+                readOnly = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
+                trailingIcon = {
+                    Icon(
+                        modifier = Modifier
+                            .rotate(
+                                if (expe)
+                                    180f
+                                else
+                                    0f
+                            )
+                            .size(16.dp)
+                            .rotate(180f),
+                        painter = painterResource(id = R.drawable.baseline_arrow_drop_up_24),
+                        contentDescription = "arrow",
+                        tint = buttonColor
+                    )
                 },
-            shape = RoundedCornerShape(13.dp),
-            value = selectedHost,
-            onValueChange = {},
-            readOnly = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text
-            ),
-            trailingIcon = {
-                Icon(
-                    modifier = Modifier
-                        .size(16.dp)
-                        .rotate(180f),
-                    painter = painterResource(id = R.drawable.baseline_arrow_drop_up_24),
-                    contentDescription = "arrow",
-                    tint = buttonColor
+                singleLine = true,
+                textStyle = TextStyle(fontSize = 16.sp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = buttonColor,
+                    cursorColor = buttonColor
                 )
-            },
-            singleLine = true,
-            textStyle = TextStyle(fontSize = 16.sp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = buttonColor,
-                cursorColor = buttonColor
             )
-        )
+        }
         DropdownMenu(
             expanded = expe,
             onDismissRequest = { expe = false },
