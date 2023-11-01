@@ -8,5 +8,5 @@ interface InitializationRepository {
 
     suspend fun updateUserData(): SingInResponse
 
-    fun getUserData(): SingInResponse
+    fun getUserData(): SingInResponse?
 }

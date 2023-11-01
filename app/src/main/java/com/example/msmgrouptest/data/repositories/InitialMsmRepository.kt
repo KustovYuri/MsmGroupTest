@@ -19,8 +19,8 @@ class InitialMsmRepository @Inject constructor(
         return request(credentials)
     }
 
-    override fun getUserData(): SingInResponse {
-        return userData!!
+    override fun getUserData(): SingInResponse? {
+        return userData
     }
 
     override suspend fun updateUserData(): SingInResponse {

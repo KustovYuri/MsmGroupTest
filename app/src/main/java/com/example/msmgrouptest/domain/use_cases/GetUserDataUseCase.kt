@@ -11,7 +11,7 @@ import javax.inject.Inject
 class GetUserDataUseCase @Inject constructor(
     private val singInRepository: InitializationRepository,
 ) {
-    operator fun invoke(): SingInResponse {
+    operator fun invoke(): SingInResponse? {
         return singInRepository.getUserData()
     }
 }
