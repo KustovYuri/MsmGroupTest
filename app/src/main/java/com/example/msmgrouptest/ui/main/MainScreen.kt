@@ -1,6 +1,11 @@
 package com.example.msmgrouptest.ui.main
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,12 +30,20 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -80,11 +93,17 @@ fun DataCard(
     userDataState: UserDataState
 ){
     var data: SingInResponse? = null
+    var isLoading by remember { mutableStateOf(false) }
 
     when(userDataState){
-        UserDataState.Error -> {}
-        UserDataState.Loading -> {}
+        UserDataState.Error -> {
+            isLoading = false
+        }
+        UserDataState.Loading -> {
+            isLoading = true
+        }
         is UserDataState.Success -> {
+            isLoading = false
             data = userDataState.userData
         }
     }
@@ -117,19 +136,22 @@ fun DataCard(
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(1.dp, buttonColor, RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 18.dp),
-                        text = "№${data?.version}",
-                        fontSize = 14.sp,
-                    )
+                ShimmerCardHolder(isLoading = isLoading ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, buttonColor, RoundedCornerShape(16.dp)),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 18.dp),
+                            text = if (data?.version != null ) "№"+data.version else "-",
+                            fontSize = 14.sp,
+                        )
+                    }
                 }
             }
+            Spacer(modifier = Modifier.height(8.dp))
             Column() {
                 Text(
                     text = "Имя пользователя: ",
@@ -137,17 +159,19 @@ fun DataCard(
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(1.dp, buttonColor, RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 18.dp),
-                        text = "${data?.userName}",
-                        fontSize = 14.sp,
-                    )
+                ShimmerCardHolder(isLoading = isLoading ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, buttonColor, RoundedCornerShape(16.dp)),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 18.dp),
+                            text = "${if (!data?.userName.isNullOrEmpty())data?.userName else "-" }",
+                            fontSize = 14.sp,
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -158,17 +182,19 @@ fun DataCard(
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(1.dp, buttonColor, RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 18.dp),
-                        text = "${data?.divisionName}",
-                        fontSize = 14.sp,
-                    )
+                ShimmerCardHolder(isLoading = isLoading ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, buttonColor, RoundedCornerShape(16.dp)),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 18.dp),
+                            text = "${if (!data?.divisionName.isNullOrEmpty())data?.divisionName else "-" }",
+                            fontSize = 14.sp,
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -179,19 +205,21 @@ fun DataCard(
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(1.dp, buttonColor, RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
+                ShimmerCardHolder(isLoading = isLoading ) {
+                    Box(
                         modifier = Modifier
-                            .padding(vertical = 18.dp)
-                            .padding(horizontal = 4.dp),
-                        text = "${data?.userId}",
-                        fontSize = 14.sp,
-                    )
+                            .fillMaxWidth()
+                            .border(1.dp, buttonColor, RoundedCornerShape(16.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(vertical = 18.dp)
+                                .padding(horizontal = 4.dp),
+                            text = "${if (!data?.userId.isNullOrEmpty())data?.userId else "-" }",
+                            fontSize = 14.sp,
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -202,19 +230,21 @@ fun DataCard(
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(1.dp, buttonColor, RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
+                ShimmerCardHolder(isLoading = isLoading ) {
+                    Box(
                         modifier = Modifier
-                            .padding(vertical = 18.dp)
-                            .padding(horizontal = 4.dp),
-                        text = "${data?.divisionId}",
-                        fontSize = 14.sp,
-                    )
+                            .fillMaxWidth()
+                            .border(1.dp, buttonColor, RoundedCornerShape(16.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(vertical = 18.dp)
+                                .padding(horizontal = 4.dp),
+                            text = "${if (!data?.divisionId.isNullOrEmpty())data?.divisionId else "-" }",
+                            fontSize = 14.sp,
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -310,4 +340,60 @@ fun ExitDialog(openDialog: MutableState<Boolean>){
             }
         }
     }
+}
+
+@Composable
+private fun ShimmerCardHolder(
+    isLoading:Boolean,
+    modifier: Modifier = Modifier,
+    contentAfterLoading: @Composable () -> Unit,
+){
+    if (isLoading){
+        ShimmerCard()
+    }
+    else
+        contentAfterLoading()
+}
+
+fun Modifier.shimmerEffect(shape: Shape): Modifier = composed {
+    var size by remember {
+        mutableStateOf(IntSize.Zero)
+    }
+    val transition = rememberInfiniteTransition(label = "")
+    val startOffsetX by transition.animateFloat(
+        initialValue = -2 * size.width.toFloat(),
+        targetValue = 2 * size.width.toFloat(),
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 1800
+            )
+        ),
+        label = "",
+    )
+
+    background(
+        brush = Brush.linearGradient(
+            colors = listOf(
+                backgroundColor,
+                buttonColor,
+                backgroundColor,
+            ),
+            start = Offset(startOffsetX, 0f),
+            end = Offset(startOffsetX + size.width.toFloat(), size.height.toFloat())
+        ),
+        shape = shape
+    ).onGloballyPositioned {
+        size = it.size
+    }
+}
+
+@Composable
+private fun ShimmerCard(){
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(55.dp)
+            .border(1.dp, buttonColor, RoundedCornerShape(16.dp))
+            .shimmerEffect(RoundedCornerShape(16.dp))
+    )
 }

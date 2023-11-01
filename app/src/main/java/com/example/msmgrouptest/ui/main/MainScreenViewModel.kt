@@ -42,7 +42,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     private fun startTimer(){
-        val totalTime: Long = 10L * 1000L
+        val totalTime: Long = 5L * 1000L
         var currentTime: Long = totalTime
 
         timerJob?.cancel()
