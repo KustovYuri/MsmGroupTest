@@ -5,11 +5,13 @@ import com.example.msmgrouptest.data.data_sources.MsmApi
 import com.example.msmgrouptest.domain.models.SingInDataModel
 import com.example.msmgrouptest.domain.models.SingInResponse
 import com.example.msmgrouptest.domain.repositories.InitializationRepository
+import com.example.msmgrouptest.domain.use_cases.GetStartPathUseCase
 import okhttp3.Credentials
 import javax.inject.Inject
 
 class InitialMsmRepository @Inject constructor(
     private val msmApi: MsmApi,
+    private val getStartPathUseCase: GetStartPathUseCase
 ) : InitializationRepository {
 
     private var userData: SingInResponse? = null
@@ -32,7 +34,7 @@ class InitialMsmRepository @Inject constructor(
     }
 
     private suspend fun request(credentials: String):SingInResponse{
-        val response = msmApi.singIn(credentials)
+        val response = msmApi.singIn(getStartPathUseCase(),credentials)
         userCredentials = credentials
         userData = response
 

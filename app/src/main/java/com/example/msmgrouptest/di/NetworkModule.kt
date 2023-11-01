@@ -1,6 +1,5 @@
 package com.example.msmgrouptest.di
 
-import com.example.msmgrouptest.Config
 import com.example.msmgrouptest.data.data_sources.MsmApi
 import com.example.msmgrouptest.data.utils.BaseUrlManager
 import dagger.Module
@@ -29,7 +28,7 @@ object NetworkModule {
     @Provides
     @Singleton
     @Named(BASE_URL)
-    fun provideBaseUrlString():String = Config.currentHost
+    fun provideBaseUrlString():String = "https://test.wlbs.ru/"
 
     @Provides
     @Singleton

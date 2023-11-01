@@ -54,6 +54,8 @@ fun HostSettingsDialog(openDialog: MutableState<Boolean>) {
 
     val viewModel = hiltViewModel<HostSettingsDialogViewModel>()
 
+    viewModel.updateSelectedHost()
+
     Dialog(onDismissRequest = { openDialog.value = false }) {
         Surface(
             shape = RoundedCornerShape(24.dp),
@@ -95,7 +97,10 @@ fun HostSettingsDialog(openDialog: MutableState<Boolean>) {
                             )
                         }
                         Spacer(modifier = Modifier.width(8.dp))
-                        TextButton(onClick = { openDialog.value = false }) {
+                        TextButton(onClick = {
+                            openDialog.value = false
+                            viewModel.submitChanged()
+                        }) {
                             Text(
                                 text = "ОК",
                                 fontSize = 14.sp,

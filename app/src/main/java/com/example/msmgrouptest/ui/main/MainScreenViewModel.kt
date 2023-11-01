@@ -48,7 +48,7 @@ class MainScreenViewModel @Inject constructor(
         timerJob?.cancel()
 
         timerJob = viewModelScope.launch {
-            while (currentTime.toFloat() >= 0f){
+            while (currentTime.toFloat() > 0f){
                 delay(100L)
                 currentTime -= 100L
                 _timeRemains.floatValue = currentTime.toFloat() / totalTime
