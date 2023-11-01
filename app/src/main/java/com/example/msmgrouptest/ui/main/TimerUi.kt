@@ -11,6 +11,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,28 +41,11 @@ import kotlin.math.sin
 
 @Composable
 fun TimerUi(
-    totalTime: Long = 60L * 1000L,
+    timeRemains: State<Float>,
     activeBarColor: Color = buttonColor,
-    initialValue: Float = 1f,
 ) {
     var size by remember {
         mutableStateOf(IntSize.Zero)
-    }
-    var value by remember {
-        mutableStateOf(initialValue)
-    }
-    var currentTime by remember {
-        mutableStateOf(totalTime)
-    }
-    var isTimerRunning by remember {
-        mutableStateOf(true)
-    }
-    LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
-        if(currentTime > 0 && isTimerRunning) {
-            delay(100L)
-            currentTime -= 100L
-            value = currentTime / totalTime.toFloat()
-        }
     }
     Canvas(
         modifier = Modifier
@@ -76,7 +60,7 @@ fun TimerUi(
         drawRoundRect(
             color = activeBarColor,
             topLeft = Offset(x = 0f, y = canvasHeight/2),
-            size = Size(height = 10f, width = canvasWidth * value),
+            size = Size(height = 10f, width = canvasWidth * timeRemains.value),
             cornerRadius = CornerRadius(x = 50f, y = 50f),
         )
     }

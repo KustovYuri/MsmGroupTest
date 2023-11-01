@@ -5,4 +5,8 @@ import com.example.msmgrouptest.domain.models.SingInResponse
 
 interface InitializationRepository {
     suspend fun singIn(singInData: SingInDataModel): SingInResponse
+
+    suspend fun updateUserData(): SingInResponse
+
+    fun getUserData(): SingInResponse
 }

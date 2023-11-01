@@ -11,8 +11,31 @@ import javax.inject.Inject
 class InitialMsmRepository @Inject constructor(
     private val msmApi: MsmApi,
 ) : InitializationRepository {
+
+    private var userData: SingInResponse? = null
+    private var userCredentials: String? = null
     override suspend fun singIn(singInData: SingInDataModel): SingInResponse {
-        val credentials = Credentials.basic(singInData.login, singInData.password)
-        return msmApi.singIn(credentials)
+        val credentials = convertToBasic(singInData)
+        return request(credentials)
+    }
+
+    override fun getUserData(): SingInResponse {
+        return userData!!
+    }
+
+    override suspend fun updateUserData(): SingInResponse {
+        return request(userCredentials!!)
+    }
+
+    private fun convertToBasic(singInData: SingInDataModel):String{
+        return Credentials.basic(singInData.login, singInData.password)
+    }
+
+    private suspend fun request(credentials: String):SingInResponse{
+        val response = msmApi.singIn(credentials)
+        userCredentials = credentials
+        userData = response
+
+        return  response
     }
 }

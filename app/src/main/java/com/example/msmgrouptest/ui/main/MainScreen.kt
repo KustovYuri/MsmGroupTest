@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.msmgrouptest.R
+import com.example.msmgrouptest.domain.models.SingInResponse
 import com.example.msmgrouptest.ui.theme.backgroundColor
 import com.example.msmgrouptest.ui.theme.buttonColor
 import com.example.msmgrouptest.ui.theme.cardColor
@@ -61,7 +63,10 @@ fun MainScreen() {
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center
             ) {
-                DataCard(modifier = Modifier.padding())
+                DataCard(
+                    timeRemains = viewModel.timeRemains,
+                    userDataState = viewModel.userData.value
+                )
             }
         }
     }
@@ -70,8 +75,20 @@ fun MainScreen() {
 
 @Composable
 fun DataCard(
-    modifier: Modifier
+    modifier: Modifier = Modifier,
+    timeRemains: State<Float>,
+    userDataState: UserDataState
 ){
+    var data: SingInResponse? = null
+
+    when(userDataState){
+        UserDataState.Error -> {}
+        UserDataState.Loading -> {}
+        is UserDataState.Success -> {
+            data = userDataState.userData
+        }
+    }
+
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -108,7 +125,7 @@ fun DataCard(
                 ) {
                     Text(
                         modifier = Modifier.padding(vertical = 18.dp),
-                        text = "№1",
+                        text = "№${data?.version}",
                         fontSize = 14.sp,
                     )
                 }
@@ -128,7 +145,7 @@ fun DataCard(
                 ) {
                     Text(
                         modifier = Modifier.padding(vertical = 18.dp),
-                        text = "TSD",
+                        text = "${data?.userName}",
                         fontSize = 14.sp,
                     )
                 }
@@ -149,7 +166,7 @@ fun DataCard(
                 ) {
                     Text(
                         modifier = Modifier.padding(vertical = 18.dp),
-                        text = "Владивосток",
+                        text = "${data?.divisionName}",
                         fontSize = 14.sp,
                     )
                 }
@@ -172,7 +189,7 @@ fun DataCard(
                         modifier = Modifier
                             .padding(vertical = 18.dp)
                             .padding(horizontal = 4.dp),
-                        text = "7a613369-6b94-11e8-8b91-f07959941a7c",
+                        text = "${data?.userId}",
                         fontSize = 14.sp,
                     )
                 }
@@ -195,13 +212,13 @@ fun DataCard(
                         modifier = Modifier
                             .padding(vertical = 18.dp)
                             .padding(horizontal = 4.dp),
-                        text = "c3a21002-ef22-11e5-a605-f07959941a7c",
+                        text = "${data?.divisionId}",
                         fontSize = 14.sp,
                     )
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
-            TimerUi()
+            TimerUi(timeRemains)
         }
     }
 }
