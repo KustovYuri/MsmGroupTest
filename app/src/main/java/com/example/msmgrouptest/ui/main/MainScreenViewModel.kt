@@ -42,7 +42,11 @@ class MainScreenViewModel @Inject constructor(
     val userData: State<UserDataState> = _userData
 
     init {
-        startTimer()
+        if (_userData.value == UserDataState.Error) {
+            updateData()
+        }else{
+            startTimer()
+        }
     }
 
     fun exitFromAccount(navigationRoute: () -> Unit){
