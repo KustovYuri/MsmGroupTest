@@ -1,7 +1,7 @@
 package com.example.msmgrouptest.di
 
-import com.example.msmgrouptest.data.data_sources.MsmApi
-import com.example.msmgrouptest.data.utils.BaseUrlManager
+import com.example.msmgrouptest.data.remote.data_sources.MsmApi
+import com.example.msmgrouptest.data.remote.utils.BaseUrlManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -102,7 +102,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providesBaseUrlManager(): BaseUrlManager{
+    fun providesBaseUrlManager(): BaseUrlManager {
         return BaseUrlManager()
     }
 

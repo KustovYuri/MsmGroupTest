@@ -1,4 +1,4 @@
-package com.example.msmgrouptest.data.data_sources
+package com.example.msmgrouptest.data.remote.data_sources
 
 import com.example.msmgrouptest.domain.models.SingInResponse
 import retrofit2.http.Header

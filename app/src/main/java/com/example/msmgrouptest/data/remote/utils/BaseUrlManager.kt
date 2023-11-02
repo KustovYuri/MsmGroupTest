@@ -1,4 +1,4 @@
-package com.example.msmgrouptest.data.utils
+package com.example.msmgrouptest.data.remote.utils
 
 import android.net.Uri
 

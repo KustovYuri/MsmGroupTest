@@ -1,6 +1,8 @@
 package com.example.msmgrouptest.di
 
-import com.example.msmgrouptest.data.repositories.InitialMsmRepository
+import com.example.data_store.repository.UserMetaDataStoreRepository
+import com.example.msmgrouptest.data.remote.repositories.InitialMsmRepository
+import com.example.msmgrouptest.domain.repositories.DataStoreRepository
 import com.example.msmgrouptest.domain.repositories.InitializationRepository
 import dagger.Binds
 import dagger.Module
@@ -16,4 +18,10 @@ abstract class RepositoryModule {
     abstract fun bindInitialRepository(
         initialRepository: InitialMsmRepository
     ): InitializationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDataStoreRepository(
+        dataStoreRepository: UserMetaDataStoreRepository
+    ): DataStoreRepository
 }

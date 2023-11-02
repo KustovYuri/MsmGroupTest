@@ -1,5 +1,6 @@
 package com.example.msmgrouptest.ui.main
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +64,7 @@ class MainScreenViewModel @Inject constructor(
 
         updateDataJob = viewModelScope.launch {
             updateUserDataUseCase().onEach { result->
+                Log.d("myMainActivity", "------------ new request")
                 when(result){
                     is Resource.Error -> updateData()
                     is Resource.Loading -> _userData.value = UserDataState.Loading

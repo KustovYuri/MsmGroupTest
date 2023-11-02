@@ -1,7 +1,7 @@
-package com.example.msmgrouptest.data.repositories
+package com.example.msmgrouptest.data.remote.repositories
 
 import android.util.Base64
-import com.example.msmgrouptest.data.data_sources.MsmApi
+import com.example.msmgrouptest.data.remote.data_sources.MsmApi
 import com.example.msmgrouptest.domain.models.SingInDataModel
 import com.example.msmgrouptest.domain.models.SingInResponse
 import com.example.msmgrouptest.domain.repositories.InitializationRepository
