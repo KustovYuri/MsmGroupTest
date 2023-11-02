@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.Serializer
 import androidx.datastore.dataStore
 import com.example.data_store.entities.AppInternalData
+import com.example.data_store.entities.SleepTimeData
 import com.example.data_store.entities.UserMetaData
 
 
@@ -19,6 +20,12 @@ class DataStoreManager(
     suspend fun setUserMetaData(userMetaData: UserMetaData){
         appInternalDataStore.updateData {
             it.copy(userMetaData = userMetaData)
+        }
+    }
+
+    suspend fun setSleepTimeData(sleepTimeData: SleepTimeData){
+        appInternalDataStore.updateData {
+            it.copy(sleepTime = sleepTimeData)
         }
     }
 

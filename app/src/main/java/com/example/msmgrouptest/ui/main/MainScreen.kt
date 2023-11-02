@@ -61,7 +61,6 @@ import com.example.msmgrouptest.ui.theme.textColor
 fun MainScreen(
     navigateToSingIn: ()->Unit
 ) {
-
     val viewModel = hiltViewModel<MainScreenViewModel>()
 
     Scaffold(

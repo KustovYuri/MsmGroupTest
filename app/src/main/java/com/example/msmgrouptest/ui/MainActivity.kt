@@ -1,12 +1,14 @@
 package com.example.msmgrouptest.ui
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +25,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.msmgrouptest.ui.main.MainScreen
 import com.example.msmgrouptest.ui.navigation.MsmNavigation
+import com.example.msmgrouptest.ui.navigation.Navigation
 import com.example.msmgrouptest.ui.sing_in.SingInScreen
 import com.example.msmgrouptest.ui.theme.MsmGroupTestTheme
 import com.example.msmgrouptest.ui.theme.backgroundColor
@@ -62,7 +65,7 @@ class MainActivity : ComponentActivity() {
                 containerColor = backgroundColor
             ) {
                 if (startScreen != null){
-                    MsmNavigation(startScreen)
+                    MsmNavigation(startScreen, viewModel.disconnect)
                 }
             }
         }
@@ -73,9 +76,11 @@ class MainActivity : ComponentActivity() {
         Log.d("myMainActivity", "onStart")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onResume() {
         super.onResume()
         Log.d("myMainActivity", "onResume")
+        viewModel.equalsSleepData()
     }
 
     override fun onPause() {
@@ -83,9 +88,11 @@ class MainActivity : ComponentActivity() {
         Log.d("myMainActivity", "onPause")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStop() {
         super.onStop()
         Log.d("myMainActivity", "onStop")
+        viewModel.updateSleepData()
     }
 
     override fun onDestroy() {

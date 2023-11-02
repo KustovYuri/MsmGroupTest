@@ -41,6 +41,7 @@ class MainScreenViewModel @Inject constructor(
 
     val userData: State<UserDataState> = _userData
 
+
     init {
         if (_userData.value == UserDataState.Error) {
             updateData()
@@ -78,7 +79,6 @@ class MainScreenViewModel @Inject constructor(
 
         updateDataJob = viewModelScope.launch {
             updateUserDataUseCase().onEach { result->
-                Log.d("myMainActivity", "------------ new request")
                 when(result){
                     is Resource.Error -> updateData()
                     is Resource.Loading -> _userData.value = UserDataState.Loading
