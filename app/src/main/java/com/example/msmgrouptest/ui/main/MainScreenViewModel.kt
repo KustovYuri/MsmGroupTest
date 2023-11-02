@@ -7,8 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.msmgrouptest.domain.models.SingInResponse
+import com.example.msmgrouptest.domain.use_cases.DataStoreUseCase
 import com.example.msmgrouptest.domain.use_cases.GetUserDataUseCase
 import com.example.msmgrouptest.domain.use_cases.UpdateUserDataUseCase
+import com.example.msmgrouptest.ui.navigation.Navigation
 import com.example.msmgrouptest.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -21,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     getUserDataUseCase: GetUserDataUseCase,
-    private val updateUserDataUseCase: UpdateUserDataUseCase
+    private val updateUserDataUseCase: UpdateUserDataUseCase,
+    private val dataStoreUseCase: DataStoreUseCase
 ): ViewModel() {
 
     private var timerJob: Job? = null
@@ -40,6 +43,13 @@ class MainScreenViewModel @Inject constructor(
 
     init {
         startTimer()
+    }
+
+    fun exitFromAccount(navigationRoute: () -> Unit){
+        viewModelScope.launch {
+            dataStoreUseCase.setCredentials(null)
+            navigationRoute()
+        }
     }
 
     private fun startTimer(){

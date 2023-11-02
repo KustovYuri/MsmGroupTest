@@ -58,12 +58,14 @@ import com.example.msmgrouptest.ui.theme.textColor
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    navigateToSingIn: ()->Unit
+) {
 
     val viewModel = hiltViewModel<MainScreenViewModel>()
 
     Scaffold(
-        topBar = {ExitButton()},
+        topBar = {ExitButton { viewModel.exitFromAccount { navigateToSingIn() } } },
         containerColor = backgroundColor,
     ) {
         Column(
@@ -254,11 +256,16 @@ fun DataCard(
 }
 
 @Composable
-fun ExitButton(){
+fun ExitButton(
+    navigateToSingIn: ()->Unit
+){
     val dialogIsOpen = remember { mutableStateOf(false) }
 
     if (dialogIsOpen.value)
-        ExitDialog(openDialog = dialogIsOpen)
+        ExitDialog(
+            openDialog = dialogIsOpen,
+            navigateToSingIn = navigateToSingIn
+        )
 
     Box(
         contentAlignment = Alignment.Center
@@ -287,7 +294,10 @@ fun ExitButton(){
 }
 
 @Composable
-fun ExitDialog(openDialog: MutableState<Boolean>){
+fun ExitDialog(
+    openDialog: MutableState<Boolean>,
+    navigateToSingIn: ()->Unit
+){
     Dialog(onDismissRequest = { openDialog.value = false }) {
         Surface(
             shape = RoundedCornerShape(24.dp),
@@ -328,7 +338,12 @@ fun ExitDialog(openDialog: MutableState<Boolean>){
                             )
                         }
                         Spacer(modifier = Modifier.width(8.dp))
-                        TextButton(onClick = { openDialog.value = false }) {
+                        TextButton(
+                            onClick = {
+                                openDialog.value = false
+                                navigateToSingIn()
+                            }
+                        ) {
                             Text(
                                 text = "ОК",
                                 fontSize = 14.sp,

@@ -13,7 +13,7 @@ class DataStoreUseCase @Inject constructor(
     suspend fun userIsAuthorize():Boolean{
         val data = dataStoreRepository.getUserMetaData().first()
 
-        return data.userMetaData.credentials.isNullOrEmpty()
+        return !data.userMetaData.credentials.isNullOrEmpty()
     }
 
     suspend fun getCredentials(): String{
@@ -22,7 +22,7 @@ class DataStoreUseCase @Inject constructor(
         return data.userMetaData.credentials?:""
     }
 
-    suspend fun setCredentials(credential: String){
+    suspend fun setCredentials(credential: String?){
         dataStoreRepository.setUserMetaData(UserMetaData(credential))
     }
 
