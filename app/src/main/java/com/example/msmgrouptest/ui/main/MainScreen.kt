@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,24 +66,30 @@ fun MainScreen(
     val viewModel = hiltViewModel<MainScreenViewModel>()
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {ExitButton { viewModel.exitFromAccount { navigateToSingIn() } } },
         containerColor = backgroundColor,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+                .padding(vertical = it.calculateTopPadding()+4.dp ),
         ) {
+            Spacer(modifier = Modifier.weight(1f))
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center
             ) {
+
                 DataCard(
                     timeRemains = viewModel.timeRemains,
                     userDataState = viewModel.userData.value
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
@@ -267,7 +275,8 @@ fun ExitButton(
         )
 
     Box(
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.background(backgroundColor)
     ){
         Text(
             text = "Личный кабинет",
