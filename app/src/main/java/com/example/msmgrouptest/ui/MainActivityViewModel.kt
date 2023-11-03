@@ -72,6 +72,7 @@ class MainActivityViewModel @Inject constructor(
                     if(sleepTime.until(currentTime, ChronoUnit.MINUTES).toInt() >= timer){
                         Log.d("myMainActivity", "request ${true}")
                         dataStoreUseCase.setCredentials(null)
+                        dataStoreUseCase.setSleepData(null)
                         disconnect.value = true
                     }
                     else{

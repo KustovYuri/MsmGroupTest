@@ -35,6 +35,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,7 +76,7 @@ fun MainScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
-                .padding(vertical = it.calculateTopPadding()+4.dp ),
+                .padding(vertical = it.calculateTopPadding() + 4.dp),
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Column(
@@ -379,13 +380,11 @@ private fun ShimmerCardHolder(
 }
 
 fun Modifier.shimmerEffect(shape: Shape): Modifier = composed {
-    var size by remember {
-        mutableStateOf(IntSize.Zero)
-    }
+    var size by remember{ mutableStateOf((IntSize.Zero)) }
     val transition = rememberInfiniteTransition(label = "")
     val startOffsetX by transition.animateFloat(
-        initialValue = -2 * size.width.toFloat(),
-        targetValue = 2 * size.width.toFloat(),
+        initialValue = -2*size.width.toFloat(),
+        targetValue =  2*size.width.toFloat(),
         animationSpec = infiniteRepeatable(
             animation = tween(
                 durationMillis = 1800
@@ -402,11 +401,14 @@ fun Modifier.shimmerEffect(shape: Shape): Modifier = composed {
                 backgroundColor,
             ),
             start = Offset(startOffsetX, 0f),
-            end = Offset(startOffsetX + size.width.toFloat(), size.height.toFloat())
+            end = Offset(startOffsetX - size.width.toFloat() /2, size.height.toFloat())
         ),
         shape = shape
     ).onGloballyPositioned {
-        size = it.size
+        if (size != it.size) {
+            size = it.size
+        }
+
     }
 }
 
